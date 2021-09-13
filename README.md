@@ -14,9 +14,10 @@ This README would normally document whatever steps are necessary to get your app
 
 1. Clone the repository on your local machine. "git clone https://jjuachon@bitbucket.org/biobank/irt-client.git"
 2. Go to the root directory: "cd irt-client"
-3. Configure your Oracle DB connection by editing the persistence.xml file. NB get the information for production from Reil.
-4. Build the source code: "./gradlew clean build". This will create an irt-client.war in the ./build/libs directory.
-5. Deploy the war file to your tomcat webapps folder.
+3. Acquire the production persistence settings here: https://stanfordmedicine.app.box.com/folder/145402666704
+4. Configure your Oracle DB connection by replacing ./persistence.xml  with the file in Box.
+5. Build the source code: "./gradlew clean build". This will create an irt-client.war in the ./build/libs directory.
+6. Deploy the war file to your tomcat webapps folder.
 
 * Configuration
 
