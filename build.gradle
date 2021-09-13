@@ -1,0 +1,71 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'war'
+//apply plugin: 'org.slf4j:slf4j-api:1.7.21'
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    // The production code uses the SLF4J logging API at implementation time
+    implementation 'org.slf4j:slf4j-api:1.7.21'
+
+    // Declare the dependency for your favourite test framework you want to use in your tests.
+    // TestNG is also supported by the Gradle Test task. Just change the
+    // testimplementation dependency to testimplementation 'org.testng:testng:6.8.1' and add
+    // 'test.useTestNG()' to your build script.
+    testImplementation 'junit:junit:4.12'
+    
+    implementation group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
+    
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.0.3.RELEASE'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.0.3.RELEASE'
+	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.4'
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+	implementation group: 'org.springframework', name: 'spring-aspects', version: '5.0.4.RELEASE'
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.2.13.Final'
+    implementation group: 'org.springframework', name: 'spring-orm', version: '5.0.4.RELEASE'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.0.3.RELEASE'
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.0.3.RELEASE'
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.0.3.RELEASE'
+    
+}
+
+war {
+	from('./') {
+        include 'persistence.xml'
+        into('WEB-INF/classes/META-INF')
+    }
+	from('./') {
+        include 'applicationContext.xml'
+        into('WEB-INF')
+    }
+    from('./') {
+        include 'restApiContext.xml'
+        into('WEB-INF')
+    }
+    from('./') {
+        include 'web.xml'
+        into('WEB-INF')
+    }
+    from('./') {
+        include 'application.properties'
+        into('WEB-INF/classes')
+    }
+    from('./') {
+        include 'logging.properties'
+        into('WEB-INF/classes')
+    }
+    from('./') {
+        include 'log4j.properties'
+        into('WEB-INF/classes')
+    }
+	archiveName 'irt-client.war'
+}
+
+

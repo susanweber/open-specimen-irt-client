@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:security="http://www.springframework.org/schema/security"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+    
+  <bean id="appProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="locations">
+      <list>
+        <value>classpath:application.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <context:component-scan base-package="edu.stanford">
+    <context:exclude-filter expression="edu.stanford.*Controller*" type="regex"/>
+  </context:component-scan>
+  
+  <aop:aspectj-autoproxy />
+  
+  <security:http use-expressions="true" auto-config="false" entry-point-ref="http403EntryPoint">
+    <security:custom-filter position="PRE_AUTH_FILTER" ref="authenticationFilter" />
+  </security:http>
+
+  <bean id="authenticationFilter" class="edu.stanford.biobank.auth.RequestRemoteUserAuthenticationFilter">
+    <property name="principalEnvironmentVariable" value="REMOTE_USER"/>
+    <property name="authenticationManager" ref="authenticationManager" />
+    <property name="checkForPrincipalChanges" value="true" />
+  </bean>
+  
+  <bean id="preauthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+    <property name="preAuthenticatedUserDetailsService">
+	  <bean id="userDetailsServiceWrapper" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+	    <property name="userDetailsService" ref="userDetailsServiceImpl"/>
+      </bean>
+    </property>
+  </bean>
+
+  <security:authentication-manager alias="authenticationManager">
+    <security:authentication-provider ref="preauthAuthProvider" />
+  </security:authentication-manager>
+  
+  <bean id="http403EntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+  </bean>
+
+</beans>
